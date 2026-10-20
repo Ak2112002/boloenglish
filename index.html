@@ -1,486 +1,1295 @@
-<!DOCTYPE html>
-<html lang="hi" class="h-full">
+ <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BoloEnglish - Advanced AI English Learning Master</title>
+    <title>BoloEnglish AI Master - Interactive English Learning Platform</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
                     colors: {
                         brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
                             500: '#6366f1',
                             600: '#4f46e5',
                             700: '#4338ca',
-                            900: '#312e81'
-                        },
-                        electric: {
-                            cyan: '#00f2fe',
-                            violet: '#4facfe',
-                            pink: '#ff0844',
-                            purple: '#ffb199'
+                            900: '#0f172a',
                         }
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', '"Noto Sans Devanagari"', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        .bg-grid-pattern {
-            background-image: radial-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px);
-            background-size: 24px 24px;
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #090d16;
+            color: #f1f5f9;
         }
-        .electric-gradient-text {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .electric-card-glow {
+        .glow-effect {
             box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.25);
         }
-        .electric-card-glow:hover {
-            box-shadow: 0 0 35px 0px rgba(168, 85, 247, 0.4);
+        .glow-active {
+            box-shadow: 0 0 30px 2px rgba(168, 85, 247, 0.4);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .mic-active {
+            animation: pulse-ring 1.5s infinite ease-in-out;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col bg-grid-pattern selection:bg-brand-500 selection:text-white">
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- NAVIGATION BAR -->
-    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="showSection('hero')">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 via-purple-600 to-pink-500 p-0.5 shadow-lg shadow-brand-500/30">
-                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-                        <i class="fa-solid fa-bolt-lightning text-2xl text-indigo-400"></i>
+    <!-- APP CONTAINER -->
+    <div id="app" class="relative min-h-screen flex flex-col">
+
+        <!-- AUTH OVERLAY (Shown when not logged in) -->
+        <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+            <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl glow-effect relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl"></div>
+                
+                <div class="text-center mb-8 relative">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white text-3xl font-extrabold mb-4 shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid font-bold fa-bolt"></i>
                     </div>
+                    <h1 class="text-3xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">BoloEnglish AI</h1>
+                    <p class="text-slate-400 text-sm mt-1">Master Spoken English with Real-Time AI Feedback</p>
+                </div>
+
+                <!-- TAB HEADERS -->
+                <div class="flex bg-slate-950 p-1 rounded-xl mb-6 border border-slate-800">
+                    <button id="tab-login-btn" onclick="switchAuthTab('login')" class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-white bg-indigo-600 shadow">Sign In</button>
+                    <button id="tab-signup-btn" onclick="switchAuthTab('signup')" class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white">Sign Up</button>
+                </div>
+
+                <!-- SIGN IN FORM -->
+                <form id="login-form" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Email Address</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-envelope absolute left-4 top-3.5 text-slate-500"></i>
+                            <input type="email" id="login-email" required placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Password</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-500"></i>
+                            <input type="password" id="login-pass" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2">
+                        <span>Start Learning</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </form>
+
+                <!-- SIGN UP FORM -->
+                <form id="signup-form" onsubmit="handleAuthSubmit(event, 'signup')" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Full Name</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-user absolute left-4 top-3.5 text-slate-500"></i>
+                            <input type="text" id="signup-name" required placeholder="Rahul Sharma" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Email Address</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-envelope absolute left-4 top-3.5 text-slate-500"></i>
+                            <input type="email" id="signup-email" required placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Password</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-500"></i>
+                            <input type="password" id="signup-pass" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2">
+                        <span>Create Account</span>
+                        <i class="fa-solid fa-user-plus text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MAIN HEADER / NAVBAR -->
+        <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 px-4 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchNav('live-talk')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-black text-xl shadow-md">
+                    <i class="fa-solid fa-bolt"></i>
                 </div>
                 <div>
-                    <span class="text-2xl font-extrabold tracking-tight electric-gradient-text">BoloEnglish</span>
-                    <span class="block text-[10px] font-semibold text-brand-500 uppercase tracking-widest">AI Master Edition</span>
+                    <div class="font-extrabold text-lg leading-tight bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">BoloEnglish AI</div>
+                    <div class="text-[10px] text-indigo-400 tracking-wider font-semibold uppercase">Master Edition</div>
                 </div>
             </div>
 
-            <div class="hidden md:flex items-center space-x-1 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
-                <button onclick="showSection('hero')" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold hover:text-indigo-400 transition-all duration-200">Home</button>
-                <button onclick="showSection('vocab')" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold hover:text-indigo-400 transition-all duration-200">Vocab AI</button>
-                <button onclick="showSection('structures')" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold hover:text-indigo-400 transition-all duration-200">Daily Structures</button>
-                <button onclick="showSection('quiz')" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold hover:text-indigo-400 transition-all duration-200">AI Quiz & Test</button>
-            </div>
+            <!-- NAVIGATION TABS -->
+            <nav class="hidden md:flex items-center space-x-1 bg-slate-900/90 p-1 rounded-2xl border border-slate-800">
+                <button onclick="switchNav('live-talk')" id="nav-live-talk" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 bg-indigo-600 text-white shadow-md">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <span>Live AI Talk</span>
+                </button>
+                <button onclick="switchNav('vocab-ai')" id="nav-vocab-ai" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-book-sparkles"></i>
+                    <span>Vocab AI</span>
+                </button>
+                <button onclick="switchNav('daily-structures')" id="nav-daily-structures" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Daily Structures</span>
+                </button>
+                <button onclick="switchNav('quiz-test')" id="nav-quiz-test" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-pen-ruler"></i>
+                    <span>AI Quiz & Test</span>
+                </button>
+            </nav>
 
+            <!-- USER MENU & API SETTINGS -->
             <div class="flex items-center space-x-3">
-                <button onclick="openAuthModal()" class="relative group overflow-hidden rounded-xl p-0.5 font-semibold text-sm">
-                    <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-xl group-hover:opacity-90 transition-opacity"></span>
-                    <span class="relative block px-5 py-2.5 bg-slate-950 rounded-[10px] transition-all group-hover:bg-opacity-0">
-                        <i class="fa-solid fa-user-astronaut mr-2"></i>Sign In / Sign Up
-                    </span>
+                <button onclick="openApiKeyModal()" class="p-2 text-slate-400 hover:text-amber-400 hover:bg-slate-900 rounded-xl border border-transparent hover:border-slate-800 transition-all text-xs flex items-center space-x-1" title="Configure Gemini API Key">
+                    <i class="fa-solid fa-key text-amber-400"></i>
+                    <span class="hidden sm:inline">API Key</span>
                 </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- MAIN CONTENT AREA -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <!-- 1. HOMEPAGE / HERO SECTION -->
-        <section id="hero" class="space-y-16 py-8">
-            <div class="text-center max-w-4xl mx-auto space-y-6">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-bold tracking-wide uppercase backdrop-blur-md">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Next-Gen AI Spoken English Engine
+                <div class="flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl">
+                    <div class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-bold" id="user-avatar-initial">U</div>
+                    <span class="text-xs font-medium text-slate-300 hidden sm:inline" id="user-display-name">User</span>
+                    <button onclick="handleSignOut()" class="text-slate-500 hover:text-rose-400 ml-1 text-xs" title="Sign Out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
                 </div>
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-                    Master Spoken English with <br>
-                    <span class="electric-gradient-text">Electrifying AI Technology</span>
-                </h1>
-                <p class="text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-                    Custom vocabulary generator, smart daily grammar structures, audio pronunciation, and adaptive AI tests tailor-made for Indian learners.
+            </div>
+        </header>
+
+        <!-- MOBILE NAV -->
+        <div class="md:hidden flex justify-around bg-slate-950 border-b border-slate-800 p-2 text-xs">
+            <button onclick="switchNav('live-talk')" id="mnav-live-talk" class="p-2 text-indigo-400 font-bold"><i class="fa-solid fa-microphone-lines block text-center mb-1"></i> Live</button>
+            <button onclick="switchNav('vocab-ai')" id="mnav-vocab-ai" class="p-2 text-slate-400"><i class="fa-solid fa-book-sparkles block text-center mb-1"></i> Vocab</button>
+            <button onclick="switchNav('daily-structures')" id="mnav-daily-structures" class="p-2 text-slate-400"><i class="fa-solid fa-layer-group block text-center mb-1"></i> Structures</button>
+            <button onclick="switchNav('quiz-test')" id="mnav-quiz-test" class="p-2 text-slate-400"><i class="fa-solid fa-pen-ruler block text-center mb-1"></i> Quiz</button>
+        </div>
+
+        <!-- MAIN BODY CONTENT -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8">
+
+            <!-- 1. LIVE AI TALK & VOICE FEEDBACK SECTION -->
+            <section id="sec-live-talk" class="space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/60 p-6 rounded-3xl border border-slate-800 glow-effect">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Real-Time Voice Assistant</span>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-white">Live AI Spoken Practice</h2>
+                        <p class="text-slate-400 text-sm mt-1">Speak into your mic or type. Gemini AI corrects your speech instantly with human-like voice playback.</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="toggleVoiceOutput()" id="voice-toggle-btn" class="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-volume-high text-indigo-400" id="voice-toggle-icon"></i>
+                            <span id="voice-toggle-text">Voice Response: ON</span>
+                        </button>
+                        <button onclick="clearChatHistory()" class="px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-xs font-semibold text-slate-400 hover:text-white transition-all">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Clear Chat
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- CHAT CONVERSATION CONTAINER -->
+                    <div class="lg:col-span-2 flex flex-col h-[520px] bg-slate-900/80 rounded-3xl border border-slate-800 overflow-hidden shadow-xl">
+                        <!-- CHAT MESSAGES STREAM -->
+                        <div id="chat-messages" class="flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar space-y-4">
+                            <!-- Welcome Message -->
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">AI</div>
+                                <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 max-w-[85%] text-slate-200 text-sm leading-relaxed shadow">
+                                    <p class="font-bold text-indigo-400 mb-1">Hello! I'm your English Tutor.</p>
+                                    <p>Click the microphone button and start speaking in English. I'll analyze your grammar, vocabulary, and pronunciation in real time!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- INPUT CONTROLS -->
+                        <div class="p-4 bg-slate-950/80 border-t border-slate-800 flex items-center space-x-3">
+                            <button id="mic-btn" onclick="toggleMic()" class="w-12 h-12 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center text-lg font-bold shadow-lg shadow-indigo-600/30 transition-all flex-shrink-0">
+                                <i class="fa-solid fa-microphone" id="mic-icon"></i>
+                            </button>
+                            <input type="text" id="chat-input" placeholder="Type your sentence or speak using mic..." onkeydown="if(event.key==='Enter') sendChatMessage()" class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                            <button onclick="sendChatMessage()" class="w-12 h-12 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center text-sm font-bold shadow-lg shadow-indigo-600/20 transition-all flex-shrink-0">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- REAL-TIME FEEDBACK PANEL -->
+                    <div class="bg-slate-900/80 rounded-3xl border border-slate-800 p-6 flex flex-col justify-between shadow-xl">
+                        <div>
+                            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                                <h3 class="font-bold text-white flex items-center space-x-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i>
+                                    <span>AI Feedback Analysis</span>
+                                </h3>
+                                <span class="text-[10px] bg-slate-800 px-2 py-1 rounded text-slate-400">Live Evaluation</span>
+                            </div>
+
+                            <div id="feedback-content" class="space-y-4">
+                                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80">
+                                    <span class="text-xs font-semibold text-slate-500 block mb-1">Grammar Score</span>
+                                    <div class="flex items-center space-x-3">
+                                        <div class="text-2xl font-extrabold text-emerald-400" id="stat-grammar-score">--/10</div>
+                                        <div class="text-xs text-slate-400" id="stat-grammar-status">Awaiting spoken input...</div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80">
+                                    <span class="text-xs font-semibold text-slate-500 block mb-1">Suggested Better Expression</span>
+                                    <p class="text-xs text-indigo-300 italic" id="stat-better-sentence">"Start talking to receive real-time corrections."</p>
+                                </div>
+
+                                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80">
+                                    <span class="text-xs font-semibold text-slate-500 block mb-1">Pronunciation / Grammar Tips</span>
+                                    <p class="text-xs text-slate-300" id="stat-tips">Speak clearly into the mic. The AI evaluates word choice, context, and grammatical precision.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-slate-800 text-center">
+                            <p class="text-[11px] text-slate-500"><i class="fa-solid fa-circle-info mr-1"></i> Powered by Gemini AI Engine</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. REAL DYNAMIC VOCABULARY GENERATOR SECTION -->
+            <section id="sec-vocab-ai" class="space-y-6 hidden">
+                <div class="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 glow-effect">
+                    <div class="flex items-center space-x-2 text-indigo-400 text-xs font-semibold mb-2 uppercase tracking-wider">
+                        <i class="fa-solid fa-brain"></i>
+                        <span>Smart Topic Generator</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">Custom Topic AI Vocab Generator</h2>
+                    <p class="text-slate-400 text-sm mt-1">Enter any subject (e.g. Hospital, Aviation, IT Interview) and get real contextual words with IPA, Hindi meaning, dual sentences, and audio voice.</p>
+
+                    <!-- GENERATOR FORM -->
+                    <form onsubmit="generateVocab(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">TOPIC / SUBJECT</label>
+                            <input type="text" id="vocab-topic" required placeholder="e.g., Office Meeting, Airport, Hotel Booking..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">WORD COUNT</label>
+                            <select id="vocab-count" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                <option value="5">5 Words</option>
+                                <option value="10" selected>10 Words</option>
+                                <option value="20">20 Words</option>
+                                <option value="50">50 Words</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" id="vocab-gen-btn" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-2xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-bolt"></i>
+                                <span>Generate Vocab</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- VOCABULARY CARDS GRID -->
+                <div id="vocab-loader" class="hidden text-center py-12">
+                    <div class="inline-block w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                    <p class="text-sm font-semibold text-indigo-400">Fetching Real Vocab with IPA & Hindi Meanings from Gemini AI...</p>
+                </div>
+
+                <div id="vocab-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards will be dynamically rendered here -->
+                </div>
+            </section>
+
+            <!-- 3. DAILY STRUCTURES ENGINE SECTION -->
+            <section id="sec-daily-structures" class="space-y-6 hidden">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/60 p-6 rounded-3xl border border-slate-800 glow-effect">
+                    <div>
+                        <div class="text-indigo-400 text-xs font-semibold mb-2 uppercase tracking-wider flex items-center space-x-2">
+                            <i class="fa-solid fa-diagram-project"></i>
+                            <span>Spoken Frameworks</span>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-white">Daily English Speaking Structures</h2>
+                        <p class="text-slate-400 text-sm mt-1">Master key sentence formulas used in everyday spoken English with Hindi rules & interactive self-checks.</p>
+                    </div>
+                    <button onclick="generateCustomStructures()" id="struct-gen-btn" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-2xl transition-all shadow-md flex items-center space-x-2">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>Generate 5 New AI Structures</span>
+                    </button>
+                </div>
+
+                <div id="structures-loader" class="hidden text-center py-12">
+                    <div class="inline-block w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                    <p class="text-sm font-semibold text-indigo-400">Generating New Practical Sentence Formulas...</p>
+                </div>
+
+                <div id="structures-container" class="space-y-6">
+                    <!-- Dynamic Structures rendered here -->
+                </div>
+            </section>
+
+            <!-- 4. ACCURATE SMART AI QUIZ & TEST SECTION -->
+            <section id="sec-quiz-test" class="space-y-6 hidden">
+                <div class="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 glow-effect">
+                    <div class="text-indigo-400 text-xs font-semibold mb-2 uppercase tracking-wider flex items-center space-x-2">
+                        <i class="fa-solid fa-award"></i>
+                        <span>Real Evaluation Engine</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">AI English Test & Quiz Generator</h2>
+                    <p class="text-slate-400 text-sm mt-1">Generate realistic, error-free multiple-choice tests on grammar, tenses, vocabulary, or preposition usage.</p>
+
+                    <form onsubmit="generateQuiz(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">QUIZ TOPIC</label>
+                            <input type="text" id="quiz-topic" required value="Prepositions & Articles" placeholder="e.g. Nouns, Tenses, Modals..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">DIFFICULTY LEVEL</label>
+                            <select id="quiz-level" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate" selected>Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">QUESTIONS COUNT</label>
+                            <select id="quiz-count" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                <option value="5" selected>5 Questions</option>
+                                <option value="10">10 Questions</option>
+                                <option value="20">20 Questions</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" id="quiz-gen-btn" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-2xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-gamepad"></i>
+                                <span>Create Quiz</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="quiz-loader" class="hidden text-center py-12">
+                    <div class="inline-block w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                    <p class="text-sm font-semibold text-indigo-400">Crafting Questions with Gemini AI Engine...</p>
+                </div>
+
+                <!-- QUIZ CONTENT CONTAINER -->
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Generated Questions Rendered Here -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-slate-800/80 bg-slate-950/80 py-6 text-center text-xs text-slate-500">
+            <p>© 2026 BoloEnglish AI Master Edition. Built for Spoken English Fluency.</p>
+        </footer>
+
+        <!-- GEMINI API KEY CONFIG MODAL -->
+        <div id="apikey-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h3 class="font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-key text-amber-400"></i>
+                        <span>Gemini API Key Required</span>
+                    </h3>
+                    <button onclick="closeApiKeyModal()" class="text-slate-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Please enter your <strong>Google Gemini API Key</strong> to activate live AI features. You can obtain a free API key from <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-indigo-400 underline hover:text-indigo-300">Google AI Studio</a>.
                 </p>
-                <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
-                    <button onclick="showSection('vocab')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 font-bold text-white shadow-lg shadow-brand-500/25 transition-all transform hover:-translate-y-0.5 flex items-center gap-3">
-                        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i> Try Vocab Generator AI
-                    </button>
-                    <button onclick="showSection('structures')" class="px-8 py-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 font-bold text-slate-200 transition-all flex items-center gap-3">
-                        <i class="fa-solid fa-book-open text-indigo-400"></i> Daily Structures
-                    </button>
-                </div>
-            </div>
-
-            <!-- FEATURES CARDS GRID -->
-            <div class="grid md:grid-cols-3 gap-8">
-                <div onclick="showSection('vocab')" class="cursor-pointer group p-8 rounded-3xl bg-slate-900/60 border border-slate-800/80 electric-card-glow transition-all duration-300">
-                    <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-language"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-white">Smart Vocab Generator</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Type any topic (e.g. Job Interview, Travel, Cricket) and set word counts to generate words with audio pronunciation, Hindi meanings & sentences.</p>
-                </div>
-
-                <div onclick="showSection('structures')" class="cursor-pointer group p-8 rounded-3xl bg-slate-900/60 border border-slate-800/80 electric-card-glow transition-all duration-300">
-                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-diagram-project"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-white">Daily 5 Important Structures</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Updated daily with full rules, Hindi meanings, dual examples, and interactive 2 practice questions for each structure.</p>
-                </div>
-
-                <div onclick="showSection('quiz')" class="cursor-pointer group p-8 rounded-3xl bg-slate-900/60 border border-slate-800/80 electric-card-glow transition-all duration-300">
-                    <div class="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-vial-circle-check"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-white">Custom AI Test & Quiz</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Choose question limits (5, 10, 20, 50, 100), select topic or custom prompts, and test yourself at Beginner, Intermediate, or Advanced level.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. AI VOCABULARY GENERATOR SECTION -->
-        <section id="vocab" class="hidden space-y-8">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 backdrop-blur-xl">
-                <div class="max-w-2xl">
-                    <h2 class="text-3xl font-extrabold text-white mb-2 flex items-center gap-3">
-                        <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i> Custom Topic AI Vocab Generator
-                    </h2>
-                    <p class="text-slate-400 text-sm">अपनी पसंद का कोई भी विषय लिखें और चुनें कि आपको कितने शब्द चाहिए।</p>
-                </div>
-
-                <div class="mt-8 grid sm:grid-cols-12 gap-4">
-                    <div class="sm:col-span-6">
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Topic (विषय)</label>
-                        <input type="text" id="vocabTopic" placeholder="e.g. Office Conversation, Hotel Booking, Football, Politics" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
-                    </div>
-                    <div class="sm:col-span-3">
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Word Count (शब्द)</label>
-                        <select id="vocabCount" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-100 focus:outline-none focus:border-indigo-500 transition">
-                            <option value="5">5 Words</option>
-                            <option value="10" selected>10 Words</option>
-                            <option value="15">15 Words</option>
-                            <option value="20">20 Words</option>
-                            <option value="30">30 Words</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-3 flex items-end">
-                        <button onclick="generateVocabulary()" class="w-full bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 py-3.5 px-6 rounded-xl font-bold text-white shadow-lg transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-bolt"></i> Generate
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VOCABULARY RESULTS CONTAINER -->
-            <div id="vocabResults" class="grid md:grid-cols-2 gap-6">
-                <!-- Dynamically Generated Cards Will Appear Here -->
-            </div>
-        </section>
-
-        <!-- 3. DAILY STRUCTURES SECTION -->
-        <section id="structures" class="hidden space-y-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-white mb-2 flex items-center gap-3">
-                        <i class="fa-solid fa-diagram-project text-purple-400"></i> Daily 5 Important Sentence Structures
-                    </h2>
-                    <p class="text-slate-400 text-sm">रोज़ान इस्तेमाल होने वाले 5 महत्वपूर्ण स्ट्रक्चर्स, उनके नियम, उदाहरण और प्रैक्टिस प्रश्न।</p>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">YOUR GEMINI API KEY</label>
+                    <input type="password" id="custom-api-key" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <p id="api-key-error" class="text-xs text-rose-400 mt-1 hidden">Please enter a valid API key before proceeding.</p>
                 </div>
-                <button onclick="loadDailyStructures()" class="px-5 py-3 rounded-xl bg-purple-600/20 border border-purple-500/30 text-purple-300 hover:bg-purple-600/30 font-semibold text-sm transition flex items-center gap-2">
-                    <i class="fa-solid fa-arrows-rotate"></i> Refresh New Structures
-                </button>
-            </div>
-
-            <div id="structuresContainer" class="space-y-6">
-                <!-- Daily Structures Rendered Here -->
-            </div>
-        </section>
-
-        <!-- 4. CUSTOM AI TEST & QUIZ SECTION -->
-        <section id="quiz" class="hidden space-y-8">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 backdrop-blur-xl">
-                <h2 class="text-3xl font-extrabold text-white mb-2 flex items-center gap-3">
-                    <i class="fa-solid fa-vial-circle-check text-pink-400"></i> Custom Topic AI Quiz & Test
-                </h2>
-                <p class="text-slate-400 text-sm mb-6">विषय, प्रश्नों की संख्या और स्तर का चयन करें। AI आपके लिए त्रुटिहीन प्रश्न तैयार करेगा।</p>
-
-                <div class="grid sm:grid-cols-12 gap-4">
-                    <div class="sm:col-span-5">
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Select Topic / Custom Topic</label>
-                        <input type="text" id="quizTopic" placeholder="e.g. Tenses, Daily Verbs, Prepositions, Business English" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pink-500 transition">
-                    </div>
-                    <div class="sm:col-span-3">
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">No. of Questions</label>
-                        <select id="quizCount" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-100 focus:outline-none focus:border-pink-500 transition">
-                            <option value="5" selected>5 Questions</option>
-                            <option value="10">10 Questions</option>
-                            <option value="20">20 Questions</option>
-                            <option value="50">50 Questions</option>
-                            <option value="100">100 Questions</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Level</label>
-                        <select id="quizLevel" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-slate-100 focus:outline-none focus:border-pink-500 transition">
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate" selected>Intermediate</option>
-                            <option value="Advanced">Advanced</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2 flex items-end">
-                        <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 py-3.5 px-6 rounded-xl font-bold text-white shadow-lg transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-play"></i> Start Quiz
-                        </button>
-                    </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
+                    <button onclick="saveApiKey()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30">Save & Continue</button>
                 </div>
             </div>
-
-            <!-- QUIZ DISPLAY AREA -->
-            <div id="quizContainer" class="hidden bg-slate-900/60 border border-slate-800 rounded-3xl p-8 space-y-6">
-                <!-- Quiz questions dynamically inserted here -->
-            </div>
-        </section>
-
-    </main>
-
-    <!-- SIGN IN / SIGN UP AUTH MODAL -->
-    <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full relative shadow-2xl">
-            <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <div class="text-center mb-8">
-                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mx-auto mb-3 text-xl">
-                    <i class="fa-solid fa-user-astronaut"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-white">Welcome to BoloEnglish</h3>
-                <p class="text-slate-400 text-xs mt-1">Sign in to track your learning progress & AI history</p>
-            </div>
-
-            <form onsubmit="event.preventDefault(); closeAuthModal(); alert('Successfully signed in!');" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
-                    <input type="email" required placeholder="you@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-brand-500 transition">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Password</label>
-                    <input type="password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:border-brand-500 transition">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-brand-600 to-purple-600 py-3.5 rounded-xl font-bold text-white shadow-lg transition">Sign In</button>
-            </form>
         </div>
+
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
     <script>
-        // Section Switching Engine
-        function showSection(sectionId) {
-            ['hero', 'vocab', 'structures', 'quiz'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // ==========================================
+        // APP STATE & CONSTANTS
+        // ==========================================
+        let currentUser = null;
+        let isMicListening = false;
+        let speechRecognition = null;
+        let voiceOutputEnabled = true;
+        let chatHistory = [];
+        let activeQuizData = null;
+        let userQuizAnswers = {};
+
+        // Storage Keys
+        const AUTH_STORAGE_KEY = 'bolo_user_session';
+        const API_KEY_STORAGE = 'bolo_custom_gemini_key';
+
+        // Initial Daily Structures Data (Default Fallback)
+        const DEFAULT_STRUCTURES = [
+            {
+                id: 1,
+                title: "Structure 1: Used to + Verb (1st form)",
+                useCase: "अतीत की आदतों (Past Habits) या पुरानी स्थितियों को व्यक्त करने के लिए।",
+                formula: "Subject + used to + V1 + Object",
+                examples: [
+                    { eng: "I used to play cricket every Sunday.", hin: "मैं हर रविवार को क्रिकेट खेला करता था।" },
+                    { eng: "She used to live in Delhi.", hin: "वह दिल्ली में रहा करती थी।" }
+                ],
+                quiz: [
+                    { q: "He ______ wake up early in his childhood.", options: ["used to", "using to", "uses to"], ans: 0 },
+                    { q: "They didn't ______ like coffee.", options: ["use to", "used to", "used"], ans: 0 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Structure 2: It is high time + Subject + V2",
+                useCase: "जब किसी काम को करने में बहुत देर हो चुकी हो और उसे तुरंत शुरू करना हो।",
+                formula: "It is high time + Subject + Past Tense (V2)",
+                examples: [
+                    { eng: "It is high time we started studying.", hin: "अब हमारे पढ़ाई शुरू करने का सही समय है।" },
+                    { eng: "It is high time you bought a new car.", hin: "अब तुम्हारे लिए नई कार खरीदने का सही समय आ गया है।" }
+                ],
+                quiz: [
+                    { q: "It is high time she ______ home.", options: ["returned", "return", "returns"], ans: 0 },
+                    { q: "It is high time we ______ English.", options: ["learned", "learn", "learning"], ans: 0 }
+                ]
+            },
+            {
+                id: 3,
+                title: "Structure 3: Feel like + Verb (-ing)",
+                useCase: "किसी चीज़ का मन करना या दिल करना (Desire/Inclination).",
+                formula: "Subject + feel/feels like + V1-ing + Object",
+                examples: [
+                    { eng: "I feel like drinking hot tea.", hin: "मेरा गरम चाय पीने का मन कर रहा है।" },
+                    { eng: "Does he feel like going out?", hin: "क्या उसका बाहर जाने का मन कर रहा है?" }
+                ],
+                quiz: [
+                    { q: "I don't feel like ______ today.", options: ["working", "work", "worked"], ans: 0 },
+                    { q: "She feels like ______ ice cream.", options: ["eating", "eat", "eaten"], ans: 0 }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // GEMINI API FETCH HELPER (FIXED FOR 403 API ERRORS)
+        // ==========================================
+        function getStoredApiKey() {
+            return (localStorage.getItem(API_KEY_STORAGE) || "").trim();
         }
 
-        // Text To Speech Speaker Functionality
+        async function fetchGeminiAI(systemInstruction, userQuery) {
+            const customKey = getStoredApiKey();
+
+            if (!customKey) {
+                openApiKeyModal();
+                return null;
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${customKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.status === 403) {
+                    alert("API Key error (403 Forbidden). Please click the API Key button at the top right and enter a valid Gemini API key.");
+                    openApiKeyModal();
+                    return null;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Gemini API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+            } catch (err) {
+                console.error("Gemini API Error:", err);
+                return null;
+            }
+        }
+
+        // Structured JSON Gemini Fetch
+        async function fetchGeminiJSON(systemInstruction, userQuery, jsonSchema) {
+            const customKey = getStoredApiKey();
+
+            if (!customKey) {
+                openApiKeyModal();
+                return null;
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${customKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: jsonSchema
+                }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.status === 403) {
+                    openApiKeyModal();
+                    const errEl = document.getElementById('api-key-error');
+                    if (errEl) {
+                        errEl.textContent = "Your API Key is invalid or unauthorized (Error 403). Please enter a valid key from Google AI Studio.";
+                        errEl.classList.remove('hidden');
+                    }
+                    throw new Error("API Key Invalid (403 Forbidden)");
+                }
+
+                if (!response.ok) throw new Error(`API Error ${response.status}`);
+                const data = await response.json();
+                const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                return JSON.parse(jsonText);
+            } catch (err) {
+                console.error("JSON Gemini Error:", err);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // API KEY MODAL LOGIC
+        // ==========================================
+        function openApiKeyModal() {
+            const errEl = document.getElementById('api-key-error');
+            if (errEl) errEl.classList.add('hidden');
+            document.getElementById('custom-api-key').value = getStoredApiKey();
+            document.getElementById('apikey-modal').classList.remove('hidden');
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('apikey-modal').classList.add('hidden');
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('custom-api-key').value.trim();
+            const errEl = document.getElementById('api-key-error');
+
+            if (!key) {
+                if (errEl) {
+                    errEl.textContent = "Please enter an API key.";
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+
+            localStorage.setItem(API_KEY_STORAGE, key);
+            closeApiKeyModal();
+            alert("Gemini API key saved! You can now use all live features.");
+        }
+
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('user-display-name').textContent = currentUser.name || currentUser.email.split('@')[0];
+                document.getElementById('user-avatar-initial').textContent = (currentUser.name || currentUser.email).charAt(0).toUpperCase();
+            }
+        }
+
+        // ==========================================
+        // AUTHENTICATION HANDLERS
+        // ==========================================
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const tabLoginBtn = document.getElementById('tab-login-btn');
+            const tabSignupBtn = document.getElementById('tab-signup-btn');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLoginBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-white bg-indigo-600 shadow";
+                tabSignupBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
+            } else {
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                tabSignupBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-white bg-indigo-600 shadow";
+                tabLoginBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-white";
+            }
+        }
+
+        function handleAuthSubmit(event, type) {
+            event.preventDefault();
+            let userObj = {};
+
+            if (type === 'login') {
+                const email = document.getElementById('login-email').value;
+                userObj = { email, name: email.split('@')[0], loggedInAt: new Date().toISOString() };
+            } else {
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                userObj = { name, email, loggedInAt: new Date().toISOString() };
+            }
+
+            currentUser = userObj;
+            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userObj));
+            document.getElementById('auth-screen').classList.add('hidden');
+            updateUserUI();
+        }
+
+        function handleSignOut() {
+            localStorage.removeItem(AUTH_STORAGE_KEY);
+            currentUser = null;
+            document.getElementById('auth-screen').classList.remove('hidden');
+        }
+
+        // ==========================================
+        // NAVIGATION HANDLER
+        // ==========================================
+        function switchNav(target) {
+            const sections = ['live-talk', 'vocab-ai', 'daily-structures', 'quiz-test'];
+            sections.forEach(s => {
+                document.getElementById(`sec-${s}`).classList.add('hidden');
+                
+                const navBtn = document.getElementById(`nav-${s}`);
+                const mnavBtn = document.getElementById(`mnav-${s}`);
+
+                if (navBtn) navBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 text-slate-400 hover:text-white";
+                if (mnavBtn) mnavBtn.className = "p-2 text-slate-400";
+            });
+
+            document.getElementById(`sec-${target}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${target}`);
+            const activeMNav = document.getElementById(`mnav-${target}`);
+
+            if (activeNav) activeNav.className = "px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 bg-indigo-600 text-white shadow-md";
+            if (activeMNav) activeMNav.className = "p-2 text-indigo-400 font-bold";
+        }
+
+        // ==========================================
+        // GEMINI API FETCH HELPER
+        // ==========================================
+        async function fetchGeminiAI(systemInstruction, userQuery) {
+            const customKey = localStorage.getItem(API_KEY_STORAGE) || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${customKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Gemini API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+            } catch (err) {
+                console.error("Gemini API Error:", err);
+                return null;
+            }
+        }
+
+        // Structured JSON Gemini Fetch
+        async function fetchGeminiJSON(systemInstruction, userQuery, jsonSchema) {
+            const customKey = localStorage.getItem(API_KEY_STORAGE) || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${customKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: jsonSchema
+                }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`API Error ${response.status}`);
+                const data = await response.json();
+                const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                return JSON.parse(jsonText);
+            } catch (err) {
+                console.error("JSON Gemini Error:", err);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // 1. LIVE AI TALK & MIC LOGIC
+        // ==========================================
+        function initSpeechRecognition() {
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+                speechRecognition = new SpeechRec();
+                speechRecognition.continuous = false;
+                speechRecognition.interimResults = false;
+                speechRecognition.lang = 'en-US';
+
+                speechRecognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('chat-input').value = transcript;
+                    sendChatMessage();
+                };
+
+                speechRecognition.onend = function() {
+                    isMicListening = false;
+                    updateMicUI();
+                };
+
+                speechRecognition.onerror = function() {
+                    isMicListening = false;
+                    updateMicUI();
+                };
+            }
+        }
+
+        function toggleMic() {
+            if (!speechRecognition) {
+                alert("Speech recognition is not supported in this browser. Try Chrome or Edge.");
+                return;
+            }
+
+            if (isMicListening) {
+                speechRecognition.stop();
+                isMicListening = false;
+            } else {
+                speechRecognition.start();
+                isMicListening = true;
+            }
+            updateMicUI();
+        }
+
+        function updateMicUI() {
+            const micBtn = document.getElementById('mic-btn');
+            const micIcon = document.getElementById('mic-icon');
+            if (isMicListening) {
+                micBtn.className = "w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center text-lg font-bold shadow-lg mic-active transition-all flex-shrink-0";
+                micIcon.className = "fa-solid fa-microphone-slash";
+            } else {
+                micBtn.className = "w-12 h-12 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center text-lg font-bold shadow-lg shadow-indigo-600/30 transition-all flex-shrink-0";
+                micIcon.className = "fa-solid fa-microphone";
+            }
+        }
+
+        function toggleVoiceOutput() {
+            voiceOutputEnabled = !voiceOutputEnabled;
+            const textEl = document.getElementById('voice-toggle-text');
+            const iconEl = document.getElementById('voice-toggle-icon');
+            if (voiceOutputEnabled) {
+                textEl.textContent = "Voice Response: ON";
+                iconEl.className = "fa-solid fa-volume-high text-indigo-400";
+            } else {
+                textEl.textContent = "Voice Response: OFF";
+                iconEl.className = "fa-solid fa-volume-xmark text-slate-500";
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        async function sendChatMessage() {
+            const inputEl = document.getElementById('chat-input');
+            const userMsg = inputEl.value.trim();
+            if (!userMsg) return;
+
+            inputEl.value = '';
+            appendChatMessage('user', userMsg);
+
+            // Fetch Gemini Response & Evaluation
+            const systemPrompt = `You are an expert Spoken English Tutor. Evaluate the user's input and reply with JSON containing:
+            1. 'aiResponse': Friendly conversational reply to the user.
+            2. 'score': Score out of 10 for grammar/fluency.
+            3. 'betterSentence': A more natural/grammatically perfect way to say user's sentence.
+            4. 'tips': Concise grammar or pronunciation advice.`;
+
+            const schema = {
+                type: "OBJECT",
+                properties: {
+                    aiResponse: { type: "STRING" },
+                    score: { type: "NUMBER" },
+                    betterSentence: { type: "STRING" },
+                    tips: { type: "STRING" }
+                },
+                required: ["aiResponse", "score", "betterSentence", "tips"]
+            };
+
+            const response = await fetchGeminiJSON(systemPrompt, userMsg, schema);
+
+            if (response) {
+                appendChatMessage('ai', response.aiResponse);
+                updateFeedbackPanel(response.score, response.betterSentence, response.tips);
+
+                if (voiceOutputEnabled) {
+                    speakText(response.aiResponse);
+                }
+            } else {
+                // Fallback reply if offline/error
+                appendChatMessage('ai', "I heard you clearly! Keep practicing your spoken English every day.");
+            }
+        }
+
+        function appendChatMessage(role, text) {
+            const chatBox = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "flex items-start space-x-3";
+
+            if (role === 'user') {
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">You</div>
+                    <div class="bg-indigo-600/90 text-white rounded-2xl p-4 max-w-[85%] text-sm leading-relaxed shadow ml-auto">
+                        ${escapeHtml(text)}
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">AI</div>
+                    <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 max-w-[85%] text-slate-200 text-sm leading-relaxed shadow flex justify-between items-start">
+                        <div>${escapeHtml(text)}</div>
+                        <button onclick="speakText('${escapeHtml(text)}')" class="ml-2 text-indigo-400 hover:text-indigo-300 text-xs flex-shrink-0"><i class="fa-solid fa-volume-high"></i></button>
+                    </div>
+                `;
+            }
+
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function updateFeedbackPanel(score, betterSentence, tips) {
+            document.getElementById('stat-grammar-score').textContent = `${score}/10`;
+            document.getElementById('stat-grammar-status').textContent = score >= 8 ? "Excellent Fluency!" : "Needs minor polish";
+            document.getElementById('stat-better-sentence').textContent = `"${betterSentence}"`;
+            document.getElementById('stat-tips').textContent = tips;
+        }
+
+        function clearChatHistory() {
+            document.getElementById('chat-messages').innerHTML = '';
+            appendChatMessage('ai', "Chat history cleared. What topic would you like to speak about now?");
+        }
+
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.95;
+                utterance.pitch = 1.0;
                 utterance.lang = 'en-US';
-                utterance.rate = 0.9;
                 window.speechSynthesis.speak(utterance);
-            } else {
-                alert("Sorry, your browser does not support text to speech!");
             }
         }
 
-        // Auth Modal Controls
-        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); document.getElementById('authModal').classList.add('flex'); }
-        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); document.getElementById('authModal').classList.remove('flex'); }
+        // ==========================================
+        // 2. VOCABULARY GENERATOR LOGIC
+        // ==========================================
+        async function generateVocab(e) {
+            e.preventDefault();
+            const topic = document.getElementById('vocab-topic').value.trim();
+            const count = parseInt(document.getElementById('vocab-count').value);
 
-        // AI VOCABULARY GENERATOR LOGIC
-        function generateVocabulary() {
-            const topic = document.getElementById('vocabTopic').value.trim() || 'General Daily English';
-            const count = parseInt(document.getElementById('vocabCount').value);
-            const container = document.getElementById('vocabResults');
-            
-            container.innerHTML = `<div class="col-span-2 text-center py-12 text-slate-400"><i class="fa-solid fa-spinner fa-spin text-3xl text-indigo-400 mb-3"></i><p>Generating ${count} vocabulary words for "${topic}"...</p></div>`;
+            if (!topic) return;
 
-            // Smart Vocab Database Simulator
-            setTimeout(() => {
-                container.innerHTML = '';
-                for (let i = 1; i <= count; i++) {
-                    const word = `${topic.split(' ')[0]} Word #${i}`;
-                    const pronunciation = `/ pronunciation_${i} /`;
-                    const hindiMeaning = `हिंदी अर्थ ${i} (विषय: ${topic})`;
-                    const exampleSentence = `This is a sample sentence using ${word} in context for ${topic}.`;
+            document.getElementById('vocab-loader').classList.remove('hidden');
+            document.getElementById('vocab-grid').innerHTML = '';
 
-                    container.innerHTML += `
-                        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 relative group hover:border-slate-700 transition">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h4 class="text-xl font-bold text-white capitalize">${word}</h4>
-                                    <span class="text-xs text-indigo-400 font-mono">${pronunciation}</span>
-                                </div>
-                                <button onclick="speakText('${word}. ${exampleSentence}')" class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500 hover:text-white transition flex items-center justify-center">
-                                    <i class="fa-solid fa-volume-high"></i>
-                                </button>
-                            </div>
-                            <div class="space-y-2 text-sm">
-                                <p class="text-emerald-400 font-semibold"><span class="text-slate-400 text-xs">Meaning:</span> ${hindiMeaning}</p>
-                                <p class="text-slate-300 italic"><span class="text-slate-500 text-xs not-italic">Example:</span> "${exampleSentence}"</p>
-                            </div>
-                        </div>
-                    `;
+            const systemPrompt = `You are a vocabulary expert. Generate exactly ${count} English vocabulary words relevant to the topic '${topic}'. For each word return:
+            1. 'word': Word in English
+            2. 'ipa': Exact IPA pronunciation (e.g., /əˈsɪstənts/)
+            3. 'hindiMeaning': Meaning in Hindi script
+            4. 'sentence1': English example sentence #1
+            5. 'sentence2': English example sentence #2`;
+
+            const schema = {
+                type: "ARRAY",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        word: { type: "STRING" },
+                        ipa: { type: "STRING" },
+                        hindiMeaning: { type: "STRING" },
+                        sentence1: { type: "STRING" },
+                        sentence2: { type: "STRING" }
+                    },
+                    required: ["word", "ipa", "hindiMeaning", "sentence1", "sentence2"]
                 }
-            }, 800);
+            };
+
+            const data = await fetchGeminiJSON(systemPrompt, `Topic: ${topic}`, schema);
+            document.getElementById('vocab-loader').classList.add('hidden');
+
+            if (data && Array.isArray(data)) {
+                renderVocabCards(data);
+            } else {
+                alert("Failed to generate vocabulary. Please check network connection or try again.");
+            }
         }
 
-        // DAILY STRUCTURES LOGIC
-        function loadDailyStructures() {
-            const container = document.getElementById('structuresContainer');
-            const sampleStructures = [
-                {
-                    title: "Structure 1: Subject + can't help + Verb(ing)",
-                    rule: "जब कोई काम किए बिना नहीं रहा जाता (Subject + can't help + V4)",
-                    meaning: "नियंत्रण न रख पाना / बिना किए न रह पाना",
-                    ex1: "I can't help laughing. (मैं हंसे बिना नहीं रह सकता।)",
-                    ex2: "She couldn't help crying. (वह रोए बिना नहीं रह सकी।)",
-                    q1: "मैं चाय पिए बिना नहीं रह सकता।",
-                    q1_ans: "I can't help taking tea.",
-                    q2: "वह मोबाइल चलाए बिना नहीं रह सकती।",
-                    q2_ans: "She can't help using the mobile."
-                },
-                {
-                    title: "Structure 2: Subject + is/am/are + supposed to + V1",
-                    rule: "Subject + is/am/are + supposed to + Verb(1st form)",
-                    meaning: "कोई काम करने की उम्मीद या नियम होना (उम्मीद की जाती है)",
-                    ex1: "You are supposed to study now. (आपसे उम्मीद की जाती है कि आप अभी पढ़ाई करें।)",
-                    ex2: "We are supposed to wear a helmet. (हमें हेलमेट पहनना चाहिए/नियम है।)",
-                    q1: "आपको समय पर आना चाहिए।",
-                    q1_ans: "You are supposed to come on time.",
-                    q2: "उसे अंग्रेजी बोलनी चाहिए।",
-                    q2_ans: "He is supposed to speak English."
-                },
-                {
-                    title: "Structure 3: It is time to + Verb(1)",
-                    rule: "It is time to + Verb (1st form)",
-                    meaning: "यह कोई कार्य करने का सही समय है",
-                    ex1: "It is time to study English. (यह अंग्रेजी पढ़ने का सही समय है।)",
-                    ex2: "It is time to start the meeting. (यह मीटिंग शुरू करने का समय है।)",
-                    q1: "यह सोने का समय है।",
-                    q1_ans: "It is time to sleep.",
-                    q2: "यह निर्णय लेने का समय है।",
-                    q2_ans: "It is time to take a decision."
-                },
-                {
-                    title: "Structure 4: Subject + feel like + Verb(ing)",
-                    rule: "Subject + feel like / feels like + Verb(ing)",
-                    meaning: "किसी चीज़ को करने का मन कर रहा है",
-                    ex1: "I feel like drinking tea. (मेरा चाय पीने का मन कर रहा है।)",
-                    ex2: "Do you feel like going out? (क्या तुम्हारा बाहर जाने का मन कर रहा है?)",
-                    q1: "मेरा आइसक्रीम खाने का मन कर रहा है।",
-                    q1_ans: "I feel like eating ice cream.",
-                    q2: "उसका सोने का मन कर रहा है।",
-                    q2_ans: "He feels like sleeping."
-                },
-                {
-                    title: "Structure 5: Subject + used to + Verb(1)",
-                    rule: "Subject + used to + Verb (1st form)",
-                    meaning: "अतीत (Past) की कोई पुरानी आदत होना (किया करता था)",
-                    ex1: "I used to play cricket. (मैं क्रिकेट खेला करता था।)",
-                    ex2: "She used to live in Delhi. (वह दिल्ली में रहा करती थी।)",
-                    q1: "मैं सुबह जल्दी उठा करता था।",
-                    q1_ans: "I used to wake up early in the morning.",
-                    q2: "हम रोज़ मिलते थे।",
-                    q2_ans: "We used to meet daily."
-                }
-            ];
+        function renderVocabCards(words) {
+            const grid = document.getElementById('vocab-grid');
+            grid.innerHTML = '';
 
-            container.innerHTML = '';
-            sampleStructures.forEach((struct, index) => {
-                container.innerHTML += `
-                    <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-bold text-indigo-400">${struct.title}</h3>
-                            <button onclick="speakText('${struct.title}. Example 1: ${struct.ex1}')" class="text-slate-400 hover:text-indigo-400"><i class="fa-solid fa-volume-high text-lg"></i></button>
-                        </div>
-                        <p class="text-sm text-slate-300"><span class="font-bold text-amber-400">Rule:</span> ${struct.rule}</p>
-                        <p class="text-sm text-slate-300"><span class="font-bold text-emerald-400">Hindi Meaning:</span> ${struct.meaning}</p>
-                        
-                        <div class="bg-slate-950 p-4 rounded-xl space-y-2 border border-slate-800/80">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Examples:</p>
-                            <p class="text-sm text-slate-200">1. ${struct.ex1}</p>
-                            <p class="text-sm text-slate-200">2. ${struct.ex2}</p>
-                        </div>
-
-                        <div class="border-t border-slate-800/80 pt-4 space-y-3">
-                            <p class="text-xs font-bold uppercase tracking-wider text-purple-400">Practice Exercises (अभ्यास प्रश्न):</p>
-                            <div class="text-sm space-y-2">
-                                <p>Q1: ${struct.q1}</p>
-                                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="text-xs text-indigo-400 hover:underline">Show/Hide Answer</button>
-                                <p class="hidden text-xs text-emerald-400 font-mono bg-emerald-950/40 p-2 rounded border border-emerald-800/40">Ans: ${struct.q1_ans}</p>
+            words.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between hover:border-indigo-500/50 transition-all";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <h3 class="text-xl font-bold text-white capitalize">${escapeHtml(item.word)}</h3>
+                                <span class="text-xs text-indigo-400 font-mono">${escapeHtml(item.ipa)}</span>
                             </div>
-                            <div class="text-sm space-y-2">
-                                <p>Q2: ${struct.q2}</p>
-                                <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="text-xs text-indigo-400 hover:underline">Show/Hide Answer</button>
-                                <p class="hidden text-xs text-emerald-400 font-mono bg-emerald-950/40 p-2 rounded border border-emerald-800/40">Ans: ${struct.q2_ans}</p>
-                            </div>
+                            <button onclick="speakText('${escapeHtml(item.word)}')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-indigo-600 text-indigo-400 hover:text-white flex items-center justify-center transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="my-3 py-1.5 px-3 rounded-xl bg-slate-950 border border-slate-800/80 inline-block text-xs font-semibold text-emerald-400">
+                            Hindi: ${escapeHtml(item.hindiMeaning)}
+                        </div>
+                        <div class="space-y-2 mt-3 text-xs text-slate-300">
+                            <p class="leading-relaxed"><strong class="text-slate-500">Ex 1:</strong> "${escapeHtml(item.sentence1)}"</p>
+                            <p class="leading-relaxed"><strong class="text-slate-500">Ex 2:</strong> "${escapeHtml(item.sentence2)}"</p>
                         </div>
                     </div>
                 `;
+                grid.appendChild(card);
             });
         }
 
-        // AI QUIZ ENGINE
-        function startQuiz() {
-            const topic = document.getElementById('quizTopic').value.trim() || 'English Grammar & Vocabulary';
-            const count = parseInt(document.getElementById('quizCount').value);
-            const level = document.getElementById('quizLevel').value;
-            const container = document.getElementById('quizContainer');
-
-            container.classList.remove('hidden');
-            container.innerHTML = `<div class="text-center py-8"><i class="fa-solid fa-spinner fa-spin text-3xl text-pink-400 mb-3"></i><p class="text-slate-400">AI is generating ${count} error-free questions for topic "${topic}" (${level} level)...</p></div>`;
-
-            setTimeout(() => {
-                container.innerHTML = `<div class="border-b border-slate-800 pb-4 mb-6 flex justify-between items-center"><h3 class="text-2xl font-bold text-white">${topic} Quiz (${level})</h3><span class="text-xs bg-pink-500/10 text-pink-400 px-3 py-1 rounded-full border border-pink-500/20">${count} Questions</span></div>`;
-
-                for (let i = 1; i <= count; i++) {
-                    container.innerHTML += `
-                        <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
-                            <p class="font-semibold text-slate-200">${i}. Choose the correct sentence or fill-in-the-blank for topic "${topic}" (${level} Question #${i}):</p>
-                            <div class="grid sm:grid-cols-2 gap-3 text-sm">
-                                <button onclick="selectAnswer(this, true)" class="text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition">A) Option 1 (Correct Answer)</button>
-                                <button onclick="selectAnswer(this, false)" class="text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition">B) Option 2 (Incorrect)</button>
-                                <button onclick="selectAnswer(this, false)" class="text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition">C) Option 3 (Incorrect)</button>
-                                <button onclick="selectAnswer(this, false)" class="text-left p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition">D) Option 4 (Incorrect)</button>
-                            </div>
-                        </div>
-                    `;
-                }
-            }, 800);
+        function loadSampleVocab() {
+            const sampleData = [
+                { word: "Collaboration", ipa: "/kəˌlæb.əˈreɪ.ʃən/", hindiMeaning: "सहयोग / मिलकर काम करना", sentence1: "Team collaboration leads to faster project completion.", sentence2: "We are working in collaboration with an international team." },
+                { word: "Efficiency", ipa: "/ɪˈfɪʃ.ən.si/", hindiMeaning: "कार्यकुशलता / क्षमता", sentence1: "The new software improved our work efficiency.", sentence2: "She handles all client tasks with great efficiency." },
+                { word: "Negotiation", ipa: "/nəˌɡəʊ.ʃiˈeɪ.ʃən/", hindiMeaning: "बातचीत / समझौता", sentence1: "The contract negotiation took three hours.", sentence2: "Good negotiation skills are vital for sales managers." }
+            ];
+            renderVocabCards(sampleData);
         }
 
-        function selectAnswer(btn, isCorrect) {
-            const parent = btn.parentElement;
-            const buttons = parent.querySelectorAll('button');
-            buttons.forEach(b => b.disabled = true);
+        // ==========================================
+        // 3. DAILY STRUCTURES ENGINE LOGIC
+        // ==========================================
+        function renderStructures(list) {
+            const container = document.getElementById('structures-container');
+            container.innerHTML = '';
 
+            list.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="text-lg font-bold text-white">${escapeHtml(item.title)}</h3>
+                        <span class="text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full">Rule #${index + 1}</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                            <span class="text-slate-500 font-semibold uppercase block mb-1">Hindi Meaning / Usage</span>
+                            <p class="text-slate-300">${escapeHtml(item.useCase)}</p>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                            <span class="text-slate-500 font-semibold uppercase block mb-1">Grammar Formula</span>
+                            <p class="text-indigo-300 font-mono font-bold">${escapeHtml(item.formula)}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <span class="text-slate-400 font-semibold uppercase block">Examples:</span>
+                        ${item.examples.map(ex => `
+                            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/60 flex items-center justify-between">
+                                <div>
+                                    <p class="text-white font-medium">"${escapeHtml(ex.eng)}"</p>
+                                    <p class="text-slate-400 text-[11px] mt-0.5">${escapeHtml(ex.hin)}</p>
+                                </div>
+                                <button onclick="speakText('${escapeHtml(ex.eng)}')" class="text-indigo-400 hover:text-indigo-300 p-2"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- QUIZ SELF-CHECK -->
+                    <div class="pt-3 border-t border-slate-800">
+                        <span class="text-xs font-semibold text-amber-400 uppercase tracking-wider block mb-2"><i class="fa-solid fa-circle-question mr-1"></i> Quick Practice Self-Check</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            ${item.quiz.map((qObj, qIdx) => `
+                                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                                    <p class="text-slate-200 mb-2">${qIdx + 1}. ${escapeHtml(qObj.q)}</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${qObj.options.map((opt, oIdx) => `
+                                            <button onclick="checkStructureQuiz(this, ${oIdx === qObj.ans})" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-medium text-[11px] transition-colors">${escapeHtml(opt)}</button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkStructureQuiz(btn, isCorrect) {
             if (isCorrect) {
-                btn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-500');
+                btn.className = "px-3 py-1 bg-emerald-600 text-white rounded-lg font-medium text-[11px]";
             } else {
-                btn.classList.add('bg-rose-600', 'text-white', 'border-rose-500');
+                btn.className = "px-3 py-1 bg-rose-600 text-white rounded-lg font-medium text-[11px]";
             }
         }
 
-        // Initialize default loaded content
-        window.onload = function() {
-            generateVocabulary();
-            loadDailyStructures();
-        };
+        async function generateCustomStructures() {
+            document.getElementById('structures-loader').classList.remove('hidden');
+            document.getElementById('structures-container').innerHTML = '';
+
+            const systemPrompt = `Generate 5 high-frequency Spoken English sentence structures in JSON format. Each structure must contain:
+            1. 'title': Title (e.g. Structure 1: Bound to + V1)
+            2. 'useCase': Hindi explanation of usage
+            3. 'formula': Sentence structure formula
+            4. 'examples': Array of 2 objects each having 'eng' and 'hin'
+            5. 'quiz': Array of 2 multiple choice questions each having 'q', 'options' (3 items), and 'ans' (0-indexed integer)`;
+
+            const schema = {
+                type: "ARRAY",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        title: { type: "STRING" },
+                        useCase: { type: "STRING" },
+                        formula: { type: "STRING" },
+                        examples: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: { eng: { type: "STRING" }, hin: { type: "STRING" } }
+                            }
+                        },
+                        quiz: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    q: { type: "STRING" },
+                                    options: { type: "ARRAY", items: { type: "STRING" } },
+                                    ans: { type: "NUMBER" }
+                                }
+                            }
+                        }
+                    },
+                    required: ["title", "useCase", "formula", "examples", "quiz"]
+                }
+            };
+
+            const data = await fetchGeminiJSON(systemPrompt, "Generate 5 new daily spoken English structures", schema);
+            document.getElementById('structures-loader').classList.add('hidden');
+
+            if (data && Array.isArray(data)) {
+                renderStructures(data);
+            } else {
+                renderStructures(DEFAULT_STRUCTURES);
+            }
+        }
+
+        // ==========================================
+        // 4. ACCURATE SMART AI QUIZ LOGIC
+        // ==========================================
+        async function generateQuiz(e) {
+            e.preventDefault();
+            const topic = document.getElementById('quiz-topic').value.trim();
+            const level = document.getElementById('quiz-level').value;
+            const count = parseInt(document.getElementById('quiz-count').value);
+
+            document.getElementById('quiz-loader').classList.remove('hidden');
+            document.getElementById('quiz-container').innerHTML = '';
+
+            const systemPrompt = `You are an English test examiner. Generate exactly ${count} multiple-choice test questions for topic '${topic}' at level '${level}'. Output JSON containing:
+            Array of objects where each item has:
+            1. 'question': Clear question prompt
+            2. 'options': Array of exactly 4 distinct options
+            3. 'correctIndex': Index (0-3) of correct option
+            4. 'explanation': Short explanation of why the answer is correct`;
+
+            const schema = {
+                type: "ARRAY",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        question: { type: "STRING" },
+                        options: { type: "ARRAY", items: { type: "STRING" } },
+                        correctIndex: { type: "NUMBER" },
+                        explanation: { type: "STRING" }
+                    },
+                    required: ["question", "options", "correctIndex", "explanation"]
+                }
+            };
+
+            const data = await fetchGeminiJSON(systemPrompt, `Topic: ${topic}, Count: ${count}, Level: ${level}`, schema);
+            document.getElementById('quiz-loader').classList.add('hidden');
+
+            if (data && Array.isArray(data)) {
+                activeQuizData = data;
+                userQuizAnswers = {};
+                renderQuizQuestions(data, topic, level);
+            } else {
+                alert("Failed to generate quiz. Please try again.");
+            }
+        }
+
+        function renderQuizQuestions(questions, topic, level) {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            const header = document.createElement('div');
+            header.className = "flex items-center justify-between bg-slate-900 border border-slate-800 p-4 rounded-2xl";
+            header.innerHTML = `
+                <div>
+                    <h3 class="font-bold text-white capitalize">${escapeHtml(topic)} Quiz (${level})</h3>
+                    <p class="text-xs text-slate-400">${questions.length} Questions Total</p>
+                </div>
+                <button onclick="submitQuiz()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg transition-all">Submit Test</button>
+            `;
+            container.appendChild(header);
+
+            questions.forEach((q, qIdx) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4";
+                card.innerHTML = `
+                    <p class="font-bold text-slate-200 text-sm">${qIdx + 1}. ${escapeHtml(q.question)}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        ${q.options.map((opt, oIdx) => `
+                            <button onclick="selectQuizOption(${qIdx}, ${oIdx}, this)" class="quiz-opt-btn-${qIdx} p-3 rounded-2xl bg-slate-950 border border-slate-800 hover:border-indigo-500 text-left text-slate-300 font-medium transition-all">
+                                <span class="font-bold mr-2 text-indigo-400">${String.fromCharCode(65 + oIdx)})</span> ${escapeHtml(opt)}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="quiz-exp-${qIdx}" class="hidden p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300">
+                        <strong class="text-emerald-400">Explanation:</strong> ${escapeHtml(q.explanation)}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectQuizOption(qIdx, oIdx, btn) {
+            userQuizAnswers[qIdx] = oIdx;
+            const buttons = document.querySelectorAll(`.quiz-opt-btn-${qIdx}`);
+            buttons.forEach((b, idx) => {
+                if (idx === oIdx) {
+                    b.className = `quiz-opt-btn-${qIdx} p-3 rounded-2xl bg-indigo-600/20 border-2 border-indigo-500 text-left text-white font-medium transition-all`;
+                } else {
+                    b.className = `quiz-opt-btn-${qIdx} p-3 rounded-2xl bg-slate-950 border border-slate-800 text-left text-slate-400 font-medium transition-all`;
+                }
+            });
+        }
+
+        function submitQuiz() {
+            if (!activeQuizData) return;
+
+            let score = 0;
+            activeQuizData.forEach((q, qIdx) => {
+                const userAns = userQuizAnswers[qIdx];
+                const buttons = document.querySelectorAll(`.quiz-opt-btn-${qIdx}`);
+                const expEl = document.getElementById(`quiz-exp-${qIdx}`);
+
+                if (expEl) expEl.classList.remove('hidden');
+
+                buttons.forEach((b, oIdx) => {
+                    b.disabled = true;
+                    if (oIdx === q.correctIndex) {
+                        b.className = `p-3 rounded-2xl bg-emerald-600/30 border-2 border-emerald-500 text-left text-white font-medium`;
+                    } else if (oIdx === userAns) {
+                        b.className = `p-3 rounded-2xl bg-rose-600/30 border-2 border-rose-500 text-left text-white font-medium`;
+                    }
+                });
+
+                if (userAns === q.correctIndex) {
+                    score++;
+                }
+            });
+
+            alert(`Quiz Submitted!\nYour Score: ${score} / ${activeQuizData.length}`);
+        }
+
+        // ==========================================
+        // API KEY MODAL LOGIC
+        // ==========================================
+        function openApiKeyModal() {
+            document.getElementById('custom-api-key').value = localStorage.getItem(API_KEY_STORAGE) || '';
+            document.getElementById('apikey-modal').classList.remove('hidden');
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('apikey-modal').classList.add('hidden');
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('custom-api-key').value.trim();
+            localStorage.setItem(API_KEY_STORAGE, key);
+            closeApiKeyModal();
+        }
+
+        // Utility: HTML Escaping
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
     </script>
 </body>
 </html>
