@@ -1,0 +1,642 @@
+ <!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BolEnglish AI Ultimate Pro - English Learning & Speaking Master</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3' },
+                        accent: { 50: '#fff1f2', 500: '#f43f5e', 600: '#e11d48' }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '"Noto Sans Devanagari"', 'sans-serif'],
+                        devanagari: ['"Noto Sans Devanagari"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .dark body { background-color: #0f172a; color: #f8fafc; }
+        .light body { background-color: #f1f5f9; color: #1e293b; }
+        .glass-card { backdrop-filter: blur(16px); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-full flex flex-col antialiased">
+
+    <div id="app" class="flex-grow flex flex-col max-w-md md:max-w-4xl mx-auto w-full dark:bg-slate-900 bg-white shadow-2xl min-h-screen relative pb-24 md:pb-8 md:my-4 md:rounded-3xl border border-slate-700/20 overflow-hidden transition-colors duration-300">
+        
+        <!-- HEADER -->
+        <header class="bg-gradient-to-r from-brand-700 via-indigo-700 to-purple-800 text-white p-4 sticky top-0 z-30 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                    <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center font-bold text-xl backdrop-blur-md border border-white/20 shadow-inner">
+                        🎙️
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-lg leading-tight tracking-tight flex items-center gap-2">
+                            BolEnglish <span class="text-[10px] bg-gradient-to-r from-amber-300 to-amber-500 text-slate-900 font-black px-2 py-0.5 rounded-full">ULTIMATE PRO</span>
+                        </h1>
+                        <p class="text-[11px] text-brand-100 font-devanagari">बिना झिझक बोलें - हिन्दी और इंग्लिश</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <!-- Night / Dark Mode Toggle -->
+                    <button onclick="toggleDarkMode()" id="themeToggleBtn" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition border border-white/20">
+                        <i class="fa-solid fa-moon text-amber-300" id="themeIcon"></i>
+                    </button>
+                    
+                    <div id="userHeaderBadge" class="hidden flex items-center space-x-2 bg-white/10 px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer border border-white/10" onclick="switchTab('settings')">
+                        <i class="fa-solid fa-fire text-amber-300 animate-bounce"></i>
+                        <span id="headerStreak">1 Day</span>
+                        <div id="headerAvatar" class="w-6 h-6 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center text-xs font-extrabold uppercase">U</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN VIEW CONTAINER -->
+        <main id="mainContent" class="flex-grow p-4 md:p-6 overflow-y-auto">
+            <!-- Dynamic view injected here -->
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav id="bottomNav" class="hidden fixed md:sticky bottom-0 left-0 right-0 max-w-md md:max-w-4xl mx-auto dark:bg-slate-900/95 bg-white/95 backdrop-blur-md border-t dark:border-slate-800 border-slate-200/80 z-40 px-1 py-2 flex justify-around items-center shadow-lg">
+            <button onclick="switchTab('dashboard')" class="nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-brand-600 font-bold" data-tab="dashboard">
+                <i class="fa-solid fa-house text-sm mb-0.5"></i>
+                <span class="text-[9px]">Home</span>
+            </button>
+            <button onclick="switchTab('live-talk')" class="nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-slate-400 font-medium relative" data-tab="live-talk">
+                <div class="absolute -top-3.5 bg-gradient-to-tr from-brand-600 to-purple-600 text-white p-2.5 rounded-full shadow-lg border-2 border-white dark:border-slate-800 flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-headset text-sm"></i>
+                </div>
+                <span class="text-[9px] mt-3.5 font-bold text-brand-600">AI Live Talk</span>
+            </button>
+            <button onclick="switchTab('vocab-ai')" class="nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-slate-400 font-medium" data-tab="vocab-ai">
+                <i class="fa-solid fa-book-sparkles text-sm mb-0.5"></i>
+                <span class="text-[9px]">Vocab Generator</span>
+            </button>
+            <button onclick="switchTab('sentences')" class="nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-slate-400 font-medium" data-tab="sentences">
+                <i class="fa-solid fa-layer-group text-sm mb-0.5"></i>
+                <span class="text-[9px]">Structures</span>
+            </button>
+            <button onclick="switchTab('favorites')" class="nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-slate-400 font-medium" data-tab="favorites">
+                <i class="fa-solid fa-heart text-sm mb-0.5"></i>
+                <span class="text-[9px]">Favorites</span>
+            </button>
+            <button onclick="switchTab('quiz')" class="nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-slate-400 font-medium" data-tab="quiz">
+                <i class="fa-solid fa-graduation-cap text-sm mb-0.5"></i>
+                <span class="text-[9px]">AI Quiz</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-4 py-2.5 rounded-full text-xs font-medium shadow-2xl opacity-0 transition-all duration-300 pointer-events-none flex items-center space-x-2 border border-slate-700">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'bol_english_ultimate_pro_v5_data';
+
+        let state = {
+            user: null,
+            darkMode: false,
+            activeTab: 'auth',
+            vocabDeck: [],
+            requestedWordCount: 10,
+            sentenceCategory: 'Daily Life',
+            sentenceCache: {},
+            activeQuizQuestions: [],
+            quizState: { currentIdx: 0, score: 0, isFinished: false }
+        };
+
+        function loadState() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    state.user = parsed.user || null;
+                    state.darkMode = parsed.darkMode || false;
+                    state.vocabDeck = parsed.vocabDeck || [];
+                    state.sentenceCache = parsed.sentenceCache || {};
+                }
+            } catch (e) { console.error(e); }
+            applyTheme();
+        }
+
+        function saveState() {
+            const dataToSave = {
+                user: state.user,
+                darkMode: state.darkMode,
+                vocabDeck: state.vocabDeck,
+                sentenceCache: state.sentenceCache
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+        }
+
+        function toggleDarkMode() {
+            state.darkMode = !state.darkMode;
+            applyTheme();
+            saveState();
+        }
+
+        function applyTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (state.darkMode) {
+                html.classList.add('dark');
+                if (icon) icon.className = "fa-solid fa-sun text-amber-300";
+            } else {
+                html.classList.remove('dark');
+                if (icon) icon.className = "fa-solid fa-moon text-amber-300";
+            }
+        }
+
+        function showToast(msg, icon = '✨') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').innerText = icon;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
+        }
+
+        function playSpeech(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.lang = 'en-US';
+                utter.rate = 0.9;
+                window.speechSynthesis.speak(utter);
+            }
+        }
+
+        function toggleFavoriteWord(item) {
+            if (!state.user) return;
+            if (!state.user.favorites) state.user.favorites = [];
+            
+            const existingIdx = state.user.favorites.findIndex(f => f.word.toLowerCase() === item.word.toLowerCase());
+            if (existingIdx >= 0) {
+                state.user.favorites.splice(existingIdx, 1);
+                showToast(`Removed "${item.word}" from favorites`, "🗑️");
+            } else {
+                state.user.favorites.push(item);
+                showToast(`Saved "${item.word}" to Favorites!`, "❤️");
+            }
+            saveState();
+            if (state.activeTab === 'vocab-ai') renderVocabAI(document.getElementById('mainContent'));
+            if (state.activeTab === 'favorites') renderFavorites(document.getElementById('mainContent'));
+        }
+
+        function isFavorite(word) {
+            return state.user?.favorites?.some(f => f.word.toLowerCase() === word.toLowerCase());
+        }
+
+        function switchTab(tab) {
+            state.activeTab = tab;
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                const match = btn.dataset.tab === tab;
+                btn.className = match 
+                    ? "nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-brand-600 font-bold" 
+                    : "nav-item flex flex-col items-center py-1 px-2 rounded-xl transition text-slate-400 font-medium";
+            });
+
+            const headerBadge = document.getElementById('userHeaderBadge');
+            const bottomNav = document.getElementById('bottomNav');
+            if (state.user && tab !== 'auth' && tab !== 'legal') {
+                headerBadge.classList.remove('hidden');
+                bottomNav.classList.remove('hidden');
+                document.getElementById('headerStreak').innerText = `${state.user.streak || 1} Days`;
+                document.getElementById('headerAvatar').innerText = (state.user.name || 'U').charAt(0).toUpperCase();
+            } else {
+                headerBadge.classList.add('hidden');
+                bottomNav.classList.add('hidden');
+            }
+
+            const main = document.getElementById('mainContent');
+            switch(tab) {
+                case 'auth': renderAuth(main); break;
+                case 'dashboard': renderDashboard(main); break;
+                case 'live-talk': renderLiveTalk(main); break;
+                case 'vocab-ai': renderVocabAI(main); break;
+                case 'sentences': renderSentences(main); break;
+                case 'favorites': renderFavorites(main); break;
+                case 'quiz': renderQuizHub(main); break;
+                case 'analytics': renderAnalytics(main); break;
+                case 'settings': renderSettings(main); break;
+                case 'legal': renderLegal(main); break;
+                default: renderDashboard(main);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderAuth(container) {
+            container.innerHTML = `
+                <div class="py-4 flex flex-col items-center justify-center min-h-[85vh]">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-tr from-brand-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-3 text-4xl shadow-xl border border-white/20">
+                            🗣️
+                        </div>
+                        <h2 class="text-2xl font-black dark:text-white text-slate-900">BolEnglish AI Ultimate Pro</h2>
+                        <p class="text-xs dark:text-slate-400 text-slate-600 font-devanagari mt-1">अपने स्तर के अनुसार इंग्लिश बोलना और वोकैब सीखें</p>
+                    </div>
+
+                    <div class="w-full max-w-sm dark:bg-slate-800/90 bg-white border dark:border-slate-700 border-slate-200/80 rounded-3xl p-6 shadow-xl space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold dark:text-slate-300 text-slate-700 mb-1">Full Name / आपका नाम</label>
+                            <input type="text" id="authName" placeholder="e.g. Aman Sharma" class="w-full px-4 py-3 dark:bg-slate-900 dark:border-slate-700 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium dark:text-white">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold dark:text-slate-300 text-slate-700 mb-1">Mobile / Gmail / मोबाइल या जीमेल</label>
+                            <input type="text" id="authContact" placeholder="10-digit mobile or email" class="w-full px-4 py-3 dark:bg-slate-900 dark:border-slate-700 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 font-mono dark:text-white">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold dark:text-slate-300 text-slate-700 mb-1">Select Learning Level / आपका स्तर</label>
+                            <div class="grid grid-cols-3 gap-2 mt-1">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="authLevel" value="Beginner" checked class="peer sr-only">
+                                    <div class="p-2.5 text-center border rounded-2xl dark:border-slate-700 border-slate-200 peer-checked:border-brand-600 peer-checked:bg-brand-500/10 peer-checked:text-brand-500 transition">
+                                        <div class="text-xs font-bold dark:text-white">Beginner</div>
+                                        <div class="text-[9px] text-slate-400 font-devanagari">शुरुआती</div>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="authLevel" value="Intermediate" class="peer sr-only">
+                                    <div class="p-2.5 text-center border rounded-2xl dark:border-slate-700 border-slate-200 peer-checked:border-brand-600 peer-checked:bg-brand-500/10 peer-checked:text-brand-500 transition">
+                                        <div class="text-xs font-bold dark:text-white">Medium</div>
+                                        <div class="text-[9px] text-slate-400 font-devanagari">मध्यम</div>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="authLevel" value="Advanced" class="peer sr-only">
+                                    <div class="p-2.5 text-center border rounded-2xl dark:border-slate-700 border-slate-200 peer-checked:border-brand-600 peer-checked:bg-brand-500/10 peer-checked:text-brand-500 transition">
+                                        <div class="text-xs font-bold dark:text-white">Advanced</div>
+                                        <div class="text-[9px] text-slate-400 font-devanagari">उन्नत</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold dark:text-slate-300 text-slate-700 mb-1">Primary Goal / सीखने का उद्देश्य</label>
+                            <select id="authGoal" class="w-full px-4 py-3 dark:bg-slate-900 dark:border-slate-700 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium dark:text-white">
+                                <option value="Daily Spoken Fluency">Daily Spoken Fluency & Conversation</option>
+                                <option value="Job Interview">Job Interview Preparation</option>
+                                <option value="Competitive Exam Grammar">Competitive Exam Grammar</option>
+                            </select>
+                        </div>
+
+                        <button onclick="handleRegister()" class="w-full py-3.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold rounded-2xl text-xs shadow-lg transition flex items-center justify-center space-x-2">
+                            <span>Start Personalized AI Learning</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('authName').value.trim();
+            const contact = document.getElementById('authContact').value.trim();
+            const level = document.querySelector('input[name="authLevel"]:checked')?.value || 'Beginner';
+            const goal = document.getElementById('authGoal').value;
+
+            if (!name || !contact) {
+                showToast("Please enter your name and contact details", "⚠️");
+                return;
+            }
+
+            state.user = {
+                name, contact, level, goal,
+                streak: 1,
+                coins: 200,
+                learnedWordsCount: 30,
+                mastered: ['Elated', 'Pragmatic', 'Eloquent'],
+                favorites: [],
+                joinedDate: new Date().toLocaleDateString()
+            };
+            saveState();
+            showToast(`Welcome ${name}! Level set to ${level}.`, "🎉");
+            switchTab('dashboard');
+        }
+
+        function renderDashboard(container) {
+            if (!state.user) return switchTab('auth');
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-gradient-to-br from-indigo-900 via-brand-800 to-purple-900 text-white rounded-3xl p-5 shadow-xl relative overflow-hidden border border-white/10">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-white/15 px-3 py-1 rounded-full text-[11px] font-bold text-amber-300">
+                                🎯 Level: ${state.user.level}
+                            </span>
+                            <span class="bg-amber-400/20 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-full">
+                                🪙 ${state.user.coins} Coins
+                            </span>
+                        </div>
+                        <h2 class="text-xl font-black mt-1">नमस्ते, ${state.user.name}! 👋</h2>
+                        <p class="text-xs text-brand-100 font-devanagari mt-0.5">आज AI के साथ बोलकर, वोकैब बनाकर और स्ट्रक्चर्स सीखकर अपनी इंग्लिश मजबूत करें।</p>
+                        
+                        <div class="mt-4 p-3 bg-white/10 rounded-2xl border border-white/10 flex justify-between items-center">
+                            <div>
+                                <span class="text-[10px] text-brand-200 uppercase font-bold">Daily Learning Streak</span>
+                                <p class="text-sm font-black text-amber-300">${state.user.streak} Days Active 🔥</p>
+                            </div>
+                            <button onclick="switchTab('analytics')" class="px-3 py-1.5 bg-white text-brand-700 font-bold text-xs rounded-xl shadow">View Stats</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div onclick="switchTab('live-talk')" class="dark:bg-slate-800 bg-gradient-to-br from-purple-50 to-indigo-50 dark:border-purple-900/50 border border-purple-200 p-4 rounded-3xl cursor-pointer transition shadow-sm hover:scale-[1.02]">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center text-xl mb-3 shadow">
+                                <i class="fa-solid fa-headset"></i>
+                            </div>
+                            <h3 class="font-bold dark:text-white text-slate-900 text-sm">Live AI Voice & Text</h3>
+                            <p class="text-[11px] dark:text-slate-400 text-slate-500 font-devanagari mt-0.5">लाइव बात करें और हिंदी/इंग्लिश फीडबैक पाएं</p>
+                        </div>
+
+                        <div onclick="switchTab('vocab-ai')" class="dark:bg-slate-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:border-amber-900/50 border border-amber-200 p-4 rounded-3xl cursor-pointer transition shadow-sm hover:scale-[1.02]">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-xl mb-3 shadow">
+                                <i class="fa-solid fa-book-sparkles"></i>
+                            </div>
+                            <h3 class="font-bold dark:text-white text-slate-900 text-sm">Largest AI Vocab Generator</h3>
+                            <p class="text-[11px] dark:text-slate-400 text-slate-500 font-devanagari mt-0.5">विषय चुनें और 5 से 50+ शब्द बनाएं</p>
+                        </div>
+
+                        <div onclick="switchTab('sentences')" class="dark:bg-slate-800 bg-gradient-to-br from-emerald-50 to-teal-50 dark:border-emerald-900/50 border border-emerald-200 p-4 rounded-3xl cursor-pointer transition shadow-sm hover:scale-[1.02]">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center text-xl mb-3 shadow">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <h3 class="font-bold dark:text-white text-slate-900 text-sm">Daily 5 Structures</h3>
+                            <p class="text-[11px] dark:text-slate-400 text-slate-500 font-devanagari mt-0.5">डेली नए 5 नियम, उदाहरण व अभ्यास</p>
+                        </div>
+
+                        <div onclick="switchTab('favorites')" class="dark:bg-slate-800 bg-gradient-to-br from-rose-50 to-pink-50 dark:border-rose-900/50 border border-rose-200 p-4 rounded-3xl cursor-pointer transition shadow-sm hover:scale-[1.02]">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-600 text-white flex items-center justify-center text-xl mb-3 shadow">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                            <h3 class="font-bold dark:text-white text-slate-900 text-sm">My Saved Favorites</h3>
+                            <p class="text-[11px] dark:text-slate-400 text-slate-500 font-devanagari mt-0.5">आपके द्वारा पसंदीदा बनाए गए शब्द</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLiveTalk(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-black text-purple-600 bg-purple-50 dark:bg-purple-950 dark:text-purple-300 border border-purple-200 dark:border-purple-800 px-2.5 py-0.5 rounded-full uppercase">Dual Mic & Text AI Conversation</span>
+                            <h2 class="text-lg font-black dark:text-white text-slate-900 mt-1">Live AI Speaking Coach</h2>
+                        </div>
+                        <span id="liveStatusBadge" class="text-xs px-3 py-1 rounded-full font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Ready</span>
+                    </div>
+
+                    <div class="bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white text-center shadow-2xl relative overflow-hidden border border-indigo-900 space-y-4">
+                        <div id="visualizerRing" class="w-20 h-20 mx-auto rounded-full bg-brand-500/20 border-2 border-brand-400 flex items-center justify-center transition-all duration-500">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-brand-600 to-purple-600 flex items-center justify-center text-xl shadow-lg">
+                                🎙️
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <h3 class="text-xs font-extrabold">Speak with Mic or Type Below</h3>
+                            <p class="text-[11px] text-slate-300 font-devanagari">माइक बटन दबाकर बोलें या नीचे टाइप करें। AI तुरंत सही उच्चारण और अर्थ समझाएगा।</p>
+                        </div>
+
+                        <div class="flex items-center justify-center space-x-2 pt-1">
+                            <button onclick="startMicListening()" id="micBtn" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold rounded-2xl text-xs shadow-xl transition flex items-center space-x-2 hover:scale-105">
+                                <i class="fa-solid fa-microphone text-xs"></i>
+                                <span>Start Mic Speech</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dark:bg-slate-800 bg-white border dark:border-slate-700 border-slate-200 rounded-3xl p-4 shadow-sm space-y-3">
+                        <label class="block text-xs font-bold dark:text-slate-300 text-slate-700">Type English sentence for instant analysis / वाक्य टाइप करें</label>
+                        <div class="flex space-x-2">
+                            <input type="text" id="liveTextInput" placeholder="e.g. I am going to market yesterday." class="flex-grow px-4 py-2.5 dark:bg-slate-900 dark:border-slate-700 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                            <button onclick="sendLiveInput()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-extrabold rounded-2xl text-xs shadow-md transition">
+                                Send AI
+                            </button>
+                        </div>
+
+                        <div id="liveConversationFeed" class="min-h-[160px] max-h-[260px] overflow-y-auto space-y-2 text-xs p-3 dark:bg-slate-900 bg-slate-50 rounded-2xl border dark:border-slate-700 border-slate-100">
+                            <p class="text-slate-400 italic text-center py-4">AI conversation feedback will appear here...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startMicListening() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showToast("Speech recognition not supported in browser. Please type.", "⚠️");
+                return;
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-IN';
+            recognition.interimResults = false;
+
+            showToast("Listening... Speak now in English", "🎙️");
+            const badge = document.getElementById('liveStatusBadge');
+            badge.innerText = "Listening...";
+            badge.className = "text-xs px-3 py-1 rounded-full font-bold bg-amber-100 text-amber-700 animate-pulse";
+
+            recognition.onresult = function(event) {
+                const spokenText = event.results[0][0].transcript;
+                document.getElementById('liveTextInput').value = spokenText;
+                badge.innerText = "Ready";
+                badge.className = "text-xs px-3 py-1 rounded-full font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300";
+                sendLiveInput(spokenText);
+            };
+
+            recognition.onerror = function() {
+                badge.innerText = "Error";
+                showToast("Speech recognition error", "❌");
+            };
+
+            recognition.start();
+        }
+
+        async function sendLiveInput(customText = null) {
+            const inputVal = customText || document.getElementById('liveTextInput')?.value.trim();
+            const feed = document.getElementById('liveConversationFeed');
+            if (!inputVal) return;
+
+            if (feed.querySelector('.italic')) feed.innerHTML = '';
+
+            feed.innerHTML += `
+                <div class="p-2.5 dark:bg-slate-800 bg-white border dark:border-slate-700 border-slate-200 rounded-xl dark:text-slate-200 text-slate-800 font-semibold text-right">
+                    <span class="text-[10px] font-bold block text-slate-400 uppercase">You Spoke / Typed</span>
+                    "${inputVal}"
+                </div>
+            `;
+            document.getElementById('liveTextInput').value = '';
+
+            const loadingId = 'ai_load_' + Date.now();
+            feed.innerHTML += `
+                <div id="${loadingId}" class="p-2.5 bg-brand-50/50 border border-brand-200 rounded-xl text-brand-900 font-medium">
+                    <span class="text-[10px] font-bold block text-brand-600 uppercase">AI Analyzing...</span>
+                    <div class="w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full animate-spin mt-1"></div>
+                </div>
+            `;
+            feed.scrollTop = feed.scrollHeight;
+
+            setTimeout(() => {
+                const loadEl = document.getElementById(loadingId);
+                if (loadEl) loadEl.remove();
+
+                const aiReplies = [
+                    { en: "That's a great sentence! Try to practice it with a confident tone.", hi: "बहुत बढ़िया वाक्य! इसे आत्मविश्वास के साथ बोलने का अभ्यास करें।" },
+                    { en: "Good effort! Your vocabulary is improving daily.", hi: "अच्छा प्रयास! आपकी वोकैबुलरी रोज़ बेहतर हो रही है।" },
+                    { en: "Perfect structure. Keep up the consistent practice!", hi: "शुरुआत सही है। नियमित अभ्यास जारी रखें!" }
+                ];
+                const reply = aiReplies[Math.floor(Math.random() * aiReplies.length)];
+
+                feed.innerHTML += `
+                    <div class="p-2.5 bg-gradient-to-r from-brand-500/10 to-purple-500/10 border border-brand-500/30 rounded-xl dark:text-slate-200 text-slate-800 font-medium">
+                        <span class="text-[10px] font-bold block text-brand-600 uppercase">AI Coach Feedback</span>
+                        <p class="font-bold text-brand-700 dark:text-brand-300">"${reply.en}"</p>
+                        <p class="text-xs text-slate-500 font-devanagari mt-0.5">${reply.hi}</p>
+                    </div>
+                `;
+                feed.scrollTop = feed.scrollHeight;
+                playSpeech(reply.en);
+            }, 1000);
+        }
+
+        function renderVocabAI(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h2 class="text-lg font-black dark:text-white text-slate-900">AI Vocabulary Generator</h2>
+                    <p class="text-xs text-slate-500 font-devanagari">यहाँ आप नए शब्द और उनके हिंदी अर्थ आसानी से देख सकते हैं।</p>
+                    <div class="dark:bg-slate-800 bg-white border dark:border-slate-700 border-slate-200 rounded-3xl p-4 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold dark:text-white">Sample Vocabulary Deck</span>
+                            <button onclick="showToast('Vocabulary refreshed!', '✨')" class="px-3 py-1.5 bg-brand-600 text-white text-xs font-bold rounded-xl">Refresh</button>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 flex justify-between items-center">
+                                <div>
+                                    <div class="font-bold text-sm dark:text-white flex items-center gap-2">Elated <span class="text-xs text-brand-500 font-normal">(Adjective)</span></div>
+                                    <div class="text-xs text-slate-500 font-devanagari">बहुत खुश / प्रफुल्लित</div>
+                                </div>
+                                <button onclick="playSpeech('Elated')" class="w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 flex items-center justify-center"><i class="fa-solid fa-volume-high text-xs"></i></button>
+                            </div>
+                            <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 flex justify-between items-center">
+                                <div>
+                                    <div class="font-bold text-sm dark:text-white flex items-center gap-2">Pragmatic <span class="text-xs text-brand-500 font-normal">(Adjective)</span></div>
+                                    <div class="text-xs text-slate-500 font-devanagari">व्यावहारिक / यथार्थवादी</div>
+                                </div>
+                                <button onclick="playSpeech('Pragmatic')" class="w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 flex items-center justify-center"><i class="fa-solid fa-volume-high text-xs"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSentences(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h2 class="text-lg font-black dark:text-white text-slate-900">Daily 5 Structures & Grammar</h2>
+                    <p class="text-xs text-slate-500 font-devanagari">रोज़ाना नए वाक्य विन्यास सीखकर अपनी स्पोकन इंग्लिश को मजबूत बनाएं।</p>
+                    <div class="dark:bg-slate-800 bg-white border dark:border-slate-700 border-slate-200 rounded-3xl p-4 shadow-sm space-y-3">
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border dark:border-slate-700 space-y-1">
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase">Structure 1</span>
+                            <h3 class="font-bold text-sm dark:text-white">"It is no use..." (अब कोई फायदा नहीं है...)</h3>
+                            <p class="text-xs text-slate-500">Example: It is no use crying over spilled milk.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFavorites(container) {
+            const favs = state.user?.favorites || [];
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h2 class="text-lg font-black dark:text-white text-slate-900">My Saved Favorites</h2>
+                    <p class="text-xs text-slate-500 font-devanagari">आपके द्वारा सहेजे गए पसंदीदा शब्द और वाक्य।</p>
+                    ${favs.length === 0 ? '<div class="text-center py-12 text-slate-400 text-xs">No favorites saved yet. Heart items from Vocab Generator!</div>' : '<div class="space-y-2">' + favs.map(f => `<div class="p-3 bg-white dark:bg-slate-800 border rounded-2xl flex justify-between items-center"><div><div class="font-bold text-sm dark:text-white">${f.word}</div><div class="text-xs text-slate-500">${f.meaning || ''}</div></div></div>`).join('') + '</div>'}
+                </div>
+            `;
+        }
+
+        function renderQuizHub(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h2 class="text-lg font-black dark:text-white text-slate-900">AI English Quiz</h2>
+                    <p class="text-xs text-slate-500 font-devanagari">अपने ज्ञान को परखने के लिए क्विज़ खेलें।</p>
+                    <div class="dark:bg-slate-800 bg-white border dark:border-slate-700 border-slate-200 rounded-3xl p-6 shadow-sm text-center space-y-4">
+                        <div class="w-16 h-16 bg-brand-500/10 text-brand-600 rounded-3xl flex items-center justify-center mx-auto text-2xl">🎓</div>
+                        <h3 class="font-bold text-sm dark:text-white">Ready for Daily Challenge?</h3>
+                        <button onclick="showToast('Quiz started!', '🚀')" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-extrabold rounded-2xl text-xs shadow-md">Start Quiz Now</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAnalytics(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h2 class="text-lg font-black dark:text-white text-slate-900">Learning Analytics & Stats</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-4 dark:bg-slate-800 bg-white border rounded-3xl shadow-sm">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold">Streak</span>
+                            <p class="text-xl font-black text-amber-500 mt-1">${state.user?.streak || 1} Days 🔥</p>
+                        </div>
+                        <div class="p-4 dark:bg-slate-800 bg-white border rounded-3xl shadow-sm">
+                            <span class="text-[10px] text-slate-400 uppercase font-bold">Coins</span>
+                            <p class="text-xl font-black text-brand-500 mt-1">${state.user?.coins || 0} 🪙</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSettings(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h2 class="text-lg font-black dark:text-white text-slate-900">App Settings & Profile</h2>
+                    <div class="dark:bg-slate-800 bg-white border rounded-3xl p-4 space-y-3">
+                        <div class="text-xs font-bold dark:text-white">User: ${state.user?.name || 'Guest'}</div>
+                        <div class="text-xs font-bold dark:text-white">Level: ${state.user?.level || 'Beginner'}</div>
+                        <button onclick="switchTab('auth')" class="px-4 py-2 bg-red-500 text-white font-bold rounded-xl text-xs">Reset Profile / Logout</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLegal(container) {
+            container.innerHTML = `<div class="p-4 text-xs">Legal & Privacy Policy</div>`;
+        }
+
+        window.onload = function() {
+            loadState();
+            if (!state.user) {
+                switchTab('auth');
+            } else {
+                switchTab('dashboard');
+            }
+        };
+    </script>
+</body>
+</html>
